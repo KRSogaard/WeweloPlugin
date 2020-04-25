@@ -49,7 +49,7 @@ publishing {
     publications {
         maven(MavenPublication) {
             groupId = 'com.wewelo'
-            artifactId = 'wewelo-gradle-pligin'
+            artifactId = 'WeweloPlugin'
             version = '1.0.0'
             from components.java
         }
