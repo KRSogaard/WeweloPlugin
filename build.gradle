@@ -1,0 +1,66 @@
+buildscript {
+    repositories {
+        jcenter()
+        gradlePluginPortal()
+        maven { url  "http://palantir.bintray.com/releases" }
+    }
+}
+
+plugins {
+    id 'java-gradle-plugin'
+    id 'maven-publish'
+    id 'maven'
+}
+
+group 'com.wewelo'
+version '1.0'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+    maven { url "https://plugins.gradle.org/m2/" }
+	maven {
+		name = "Wewelo Repo"
+		url "s3://${weweloRepo}"
+		credentials(AwsCredentials) {
+			accessKey weweloRepoUser
+			secretKey weweloRepoPassword
+		}
+	}
+}
+
+dependencies {
+    implementation gradleApi()
+    implementation 'commons-io:commons-io:2.6'
+    implementation "com.google.errorprone:error_prone_core:2.3.4"
+    implementation "net.ltgt.gradle:gradle-errorprone-plugin:1.1.1"
+
+    // Google Guava
+    implementation 'com.google.guava:guava:28.0-jre'
+
+    // Lombok
+    compile 'org.projectlombok:lombok:1.+'  // utilities for POJOs
+    annotationProcessor 'org.projectlombok:lombok:1.+'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.+'
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId = 'com.wewelo'
+            artifactId = 'wewelo-gradle-pligin'
+            version = '1.0.0'
+            from components.java
+        }
+    }
+    repositories {
+        maven {
+            url "s3://repo.wewelo.com/release"
+            credentials(AwsCredentials) {
+                accessKey weweloRepoUser
+                secretKey weweloRepoPassword
+            }
+        }
+    }
+}
